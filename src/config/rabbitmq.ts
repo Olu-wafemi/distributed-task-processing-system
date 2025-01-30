@@ -1,14 +1,16 @@
 import amqp from "amqplib";
+import dotenv from "dotenv"
 
-const RABBITMQ_URL: string = "amqp://localhost";
 
-let channel: amqp.channel;
+const RABBITMQ_URL:any = process.env.RABBITMQ_URL;
+
+let channel: amqp.Channel;
 
 const ConnectToRabbitMQ = async ()=>{
     try{
         const connection = await amqp.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
-        await channel.assertQueue('task_queue', {durbale: true});
+        await channel.assertQueue('task_queue', {durable: true});
         console.log("Connected to RabbitMQ")
         }
         catch(error){

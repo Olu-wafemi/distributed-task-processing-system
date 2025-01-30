@@ -2,12 +2,16 @@ import express, { Request, Response } from "express";
 import { testDbConnection } from "./src/config/db";
 import dotenv from "dotenv";
 
+
+import {router} from "./src/routes/task"
 dotenv.config()
 
 
 testDbConnection();
 
 const app = express()
+
+app.use("/task", router);
 
 const PORT = process.env.PORT || 6000
 
