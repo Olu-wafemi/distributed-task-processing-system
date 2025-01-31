@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Task {
+model task {
   id        String   @id @default(uuid())
   type      String
   status    String   @default("pending")

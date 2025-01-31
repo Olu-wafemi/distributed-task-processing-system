@@ -10,8 +10,13 @@ interface TaskBody{
 
 const TaskController = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
 
-    try{
-        const {type} = req.body as TaskBody;
+   // try{
+   
+        const {type }= req.body
+
+        
+
+        console.log(type)
         if(!type){
             res.status(400).json({error: "Task type is required"});
         }
@@ -24,11 +29,11 @@ const TaskController = async(req: Request, res: Response, next: NextFunction): P
 
         res.status(201).json({message: "Task Submitted", taskId: newTask.id});
 
-    }catch (error){
-        console.error("Error submiting task:", error);
-        res.status(500).json({error: "Internal server error"})
-        next(error);
-    }
+   // }catch (error){
+     //   console.error("Error submiting task:", error);
+       // res.status(500).json({error: "Internal server error",})
+        //next(error);
+    //}
 
 
 

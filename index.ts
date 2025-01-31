@@ -3,13 +3,17 @@ import { testDbConnection } from "./src/config/db";
 import dotenv from "dotenv";
 
 
+
 import {router} from "./src/routes/task"
+import { ConnectToRabbitMQ } from "./src/config/rabbitmq";
 dotenv.config()
 
 
 testDbConnection();
+ConnectToRabbitMQ();
 
 const app = express()
+app.use(express.json());
 
 app.use("/task", router);
 

@@ -4,6 +4,8 @@ import dotenv from "dotenv"
 
 const RABBITMQ_URL:any = process.env.RABBITMQ_URL;
 
+const queue_name = process.env.QUEUE_NAME as string
+
 let channel: amqp.Channel;
 
 const ConnectToRabbitMQ = async ()=>{
@@ -24,7 +26,7 @@ const publishTask = async (task: {id: string, type: string}) =>{
         throw new Error('RabbitMQ channel is not initialiazed')
     }
 
-    channel.sendToQueue('task_queue', Buffer.from(JSON.stringify(task)),{
+    channel.sendToQueue(queue_name, Buffer.from(JSON.stringify(task)),{
         persistent: true,
     })
 

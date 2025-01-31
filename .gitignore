@@ -2,3 +2,5 @@ node_modules
 .env
 worker.js
 new_task.js
+erl_crash.dump
+prisma
