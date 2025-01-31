@@ -3,11 +3,15 @@ import {publishTask } from "../config/rabbitmq"
 import { prisma} from "../config/db"
 
 
+interface TaskBody{
+    type :string;
+}
+
 
 const TaskController = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
 
     try{
-        const {type} = req.body;
+        const {type} = req.body as TaskBody;
         if(!type){
             res.status(400).json({error: "Task type is required"});
         }
