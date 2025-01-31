@@ -4,12 +4,12 @@ import { prisma} from "../config/db"
 
 
 
-const TaskController = async(req: Request, res: Response, next: NextFunction)=>{
+const TaskController = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
 
     try{
         const {type} = req.body;
         if(!type){
-            return res.status(400).json({error: "Task type is required"});
+            res.status(400).json({error: "Task type is required"});
         }
 
         const newTask = await prisma.task.create({
@@ -18,7 +18,7 @@ const TaskController = async(req: Request, res: Response, next: NextFunction)=>{
 
         await publishTask ({id: newTask.id, type: newTask.type});
 
-        return res.status(201).json({message: "Task Submitted", taskId: newTask.id});
+        res.status(201).json({message: "Task Submitted", taskId: newTask.id});
 
     }catch (error){
         console.error("Error submiting task:", error);
