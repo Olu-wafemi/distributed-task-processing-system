@@ -1,22 +1,16 @@
-import {task} from "@prisma/client";
-import { prisma } from "../config/db";
-import { handleImageUploadTask } from "../tasks/imageUpload";
-import { PdfToDocxTask } from "../tasks/pdfToWordTask";
+import {getRabbitMQChannel} from "../config/rabbitmq"
+import { task } from '@prisma/client';
 
-export const submitTask = async(taskPayload: any)=>{
+const channel = getRabbitMQChannel();
+export const addImageUploadTask = async(taskData: any) =>{
 
-    const task = await prisma.task.create({
-        data: {
-            type: taskPayload.type,
-            status: "pending",
-            filePath: taskPayload.filePath
-        }
-    })
-    if(task.type === "image_upload"){
-        handleImageUploadTask(task)
-    }else if(task.type === "pdf_to_word"){
-        PdfToDocxTask(task)
-    }
+    const task = {type: 'image-upload', ...taskData};
 
-    return task;
+    channel.sendToQueue('imageUploadQueue', Buffer.from(JSON.stringify(task)));
+
 }
+
+export const addPdfConversionTask = async(taskData: any) =>{
+    const task = {type: 'pdf-to-word', ...taskData};
+    channel.sendToQueue('pdfToWOrdQueue', Buffer.from(JSON.stringify(task)));
+};

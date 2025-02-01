@@ -1,5 +1,6 @@
 import amqp from "amqplib";
 import dotenv from "dotenv"
+import e from "express";
 
 
 const RABBITMQ_URL:any = process.env.RABBITMQ_URL;
@@ -7,13 +8,14 @@ const RABBITMQ_URL:any = process.env.RABBITMQ_URL;
 const queue_name = process.env.QUEUE_NAME as string
 
 let channel: amqp.Channel;
-
-const ConnectToRabbitMQ = async ()=>{
+let connection: amqp.Connection
+export const ConnectToRabbitMQ = async ()=>{
     try{
-        const connection = await amqp.connect(RABBITMQ_URL);
+        connection = await amqp.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
-        await channel.assertQueue('task_queue', {durable: true});
-        console.log("Connected to RabbitMQ")
+        await channel.assertQueue('imageUploadQueue', {durable: true});
+        await channel.assertQueue("pdfToWordQueue", {durable: true});
+        console.log("Queues are ready")
         }
         catch(error){
             console.error("RabbitMQ connection error", error);
@@ -21,17 +23,12 @@ const ConnectToRabbitMQ = async ()=>{
 
 }
 
-const publishTask = async (task: {id: string, type: string}) =>{
-    if(!channel){
-        throw new Error('RabbitMQ channel is not initialiazed')
-    }
 
-    channel.sendToQueue(queue_name, Buffer.from(JSON.stringify(task)),{
-        persistent: true,
-    })
 
-    console.log(`Task [${task.id}] sent to queue`);
-}
+export const getRabbitMQChannel = () => channel;
 
-export { ConnectToRabbitMQ, publishTask}
+export const closeRabbitMQ = async() =>{
+    await channel.close();
+    await connection.close();
 
+} 

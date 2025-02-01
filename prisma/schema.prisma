@@ -15,7 +15,7 @@ datasource db {
 
 model task {
   id        String   @id @default(uuid())
-  type      String
+  taskId    String?
   status    String   @default("pending")
   result    String?
   createdAt DateTime @default(now())
