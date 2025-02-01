@@ -37,7 +37,7 @@ const PdfToWordController = async(req:Request, res: Response)=>{
    try{
     const pdfData = req.file?.buffer.toString('base64');
     if(!pdfData){
-        return res.status(400).json({error: "No PDF file detected"});
+         res.status(400).json({error: "No PDF file detected"});
     }
 
     const taskId = generateTaskId();

@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Olu-wafemi/distributed-task-processing-system#readme",
   "dependencies": {
     "@prisma/client": "^6.3.0",
+    "@types/multer": "^1.4.12",
     "amqplib": "^0.10.5",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",

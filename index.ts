@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import { testDbConnection } from "./src/config/db";
 import dotenv from "dotenv";
 
+import multer from "multer";
 
-
-import {router} from "./src/routes/task"
+import taskRoutes from "./src/routes/taskRoutes"
 import { ConnectToRabbitMQ } from "./src/config/rabbitmq";
 dotenv.config()
 
@@ -14,8 +14,13 @@ ConnectToRabbitMQ();
 
 const app = express()
 app.use(express.json());
+const upload = multer();
 
-app.use("/task", router);
+app.use("/api", taskRoutes);
+
+app.post('/api/upload-image', upload.single('file'), (req: Request,res: Response)=>{
+    upload
+})
 
 const PORT = process.env.PORT || 6000
 
