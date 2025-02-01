@@ -39,5 +39,17 @@ const TaskController = async(req: Request, res: Response, next: NextFunction): P
 
 };
 
+const ImageUploadController = async(req:Request, res: Response)=>{
+
+    if(!req.file){
+        res.status(400).json({status: false, message: "No file detected"})
+    }
+
+    const taskpayload = {
+        type: 'image_upload',
+        filePath: req.file.path
+    }
+}
+
 export {TaskController}
 
