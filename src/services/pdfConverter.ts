@@ -4,23 +4,24 @@ import path from "path"
 import convertapi from 'convertapi';
 const api = convertapi(process.env.API_SECRET as string)
 
-export const PdfToDocxTask = async(task: task)=>{
+export const PdfToDocxTask = async(taskData: any): Promise<string> =>{
 
     try{
-        const pdfPath = task.filePath;
+        const {pdfData,taskId} = taskData
 
-        const outputFilePath = path.join('uploads/word/', `${task.id}.docx`);
+        const outputFilePath = path.join('uploads/word/', `${taskId}.docx`);
          const result = api.convert('docx', {
-            File: pdfPath
+            File: pdfData
         })
 
         result.saveFiles(outputFilePath);
+
+        return outputFilePath
+
+
     }
     catch(err){
-        await prisma.task.update({
-            where:{id: task.id},
-            data: {status: "failed"}
-        })
+        return "Internal Server error" 
 
 
     }

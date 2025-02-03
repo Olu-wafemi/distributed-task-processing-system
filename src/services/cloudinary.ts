@@ -18,7 +18,8 @@ export const uploadImageToCloudinary = async(imageData: string)=>{
 
 export const uploadDocxToCloudinary = async(docsData: string)=>{
     const uploadResult = await cloudinary.uploader.upload(
-        `data:image/jpeg;base64, ${docsData}`,{public_id: "Docs"}
+        `data:image/pdf
+        ;base64, ${docsData}`,{public_id: "Docs"}
     ).catch((error)=>{
         return error
     })
