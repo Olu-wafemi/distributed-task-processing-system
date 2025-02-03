@@ -1,36 +1,59 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { testDbConnection } from "./src/config/db";
 import dotenv from "dotenv";
-
 import multer from "multer";
-
 import taskRoutes from "./src/routes/taskRoutes"
 import { ConnectToRabbitMQ } from "./src/config/rabbitmq";
+import bodyParser from "body-parser";
+//import { consumeImageUploadQueue } from "./src/workers/imageUploadWorker";
+
 dotenv.config()
 
 
-testDbConnection();
-ConnectToRabbitMQ();
+async function initializeApp() {
+    try {
+   
+        await ConnectToRabbitMQ();
+    
+        await testDbConnection();
 
-const app = express()
-app.use(express.json());
-const upload = multer();
+        
+    
+        const app = express()
+        
+           
+        app.use(bodyParser.urlencoded({ extended: false }))
+        app.use(express.json())
+        app.use(express.urlencoded())
 
-app.use("/api", taskRoutes);
+        const upload = multer()
+        
+       
+        app.post('/api/upload-image', upload.single('file'), 
+            async (req: Request, res: Response, next: NextFunction) => {
+                
+            }
+        )
 
-app.post('/api/upload-image', upload.single('file'), (req: Request,res: Response)=>{
-    upload
-})
+        app.use("/api", taskRoutes)
 
-const PORT = process.env.PORT || 6000
+      
+        app.get('/', (_req: Request, res: Response) => {
+            res.send("Service is running")
+        })
 
-app.use(express.json());
+        
+        const PORT = process.env.PORT || 6000
+        app.listen(PORT, () => {
+            console.log(`Server is running on ${PORT}`)
+        })
 
-app.get('/', (_req: Request , res: Response) =>{
+        return app
+    } catch (error) {
+        console.error('Failed to initialize application:', error)
+        process.exit(1)
+    }
+}
 
-    res.send("Service is running")
-})
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running on ${PORT}`)
-})
+initializeApp()

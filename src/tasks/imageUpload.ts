@@ -2,8 +2,10 @@ import { task } from '@prisma/client';
 import {prisma } from '../config/db';
 import fs from 'fs';
 import path from 'path';
-import { getRabbitMQChannel } from '../config/rabbitmq';
-import { channel } from 'diagnostics_channel';
+import { ConnectToRabbitMQ, getRabbitMQChannel } from '../config/rabbitmq';
+import amqp from 'amqplib';
+
+
 
 export const submitImageUploadTask = async (filePath: string, taskId: string)=>{
     const channel = getRabbitMQChannel();

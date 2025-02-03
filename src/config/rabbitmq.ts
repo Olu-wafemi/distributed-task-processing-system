@@ -14,8 +14,10 @@ export const ConnectToRabbitMQ = async ()=>{
         connection = await amqp.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
         await channel.assertQueue('imageUploadQueue', {durable: true});
+                await channel.assertQueue('imageUploadQueu', {durable: true});
         await channel.assertQueue("pdfToWordQueue", {durable: true});
         console.log("Queues are ready")
+        
         }
         catch(error){
             console.error("RabbitMQ connection error", error);
@@ -25,10 +27,21 @@ export const ConnectToRabbitMQ = async ()=>{
 
 
 
-export const getRabbitMQChannel = () => channel;
+export const getRabbitMQChannel = (): amqp.Channel=>{
+    if(!channel){
+        console.error("channel is not initalized yet")
+        
+    }
+
+    return channel;
+};
 
 export const closeRabbitMQ = async() =>{
     await channel.close();
     await connection.close();
 
 } 
+
+
+
+

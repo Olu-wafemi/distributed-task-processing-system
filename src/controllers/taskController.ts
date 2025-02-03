@@ -3,29 +3,31 @@ import { addImageUploadTask, addPdfConversionTask } from "../services/taskServic
 import  {generateTaskId } from "../utils/generateId";
 
 
-interface TaskBody{
-    type :string;
-}
 
 
-const uploadImageController = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+const uploadImageController = async(req: Request, res: Response, next: NextFunction): Promise<any>    =>{
 
    try{
+
+
+        //console.log(req.file)
    
         const imageData = req.file?.buffer.toString('base64');
         if(!imageData){
-            res.status(400).json({status: false, message: "No image detected"});
+            return res.status(400).json({status: false, message: "No image detected"});
 
         }
+        
 
         const taskId = generateTaskId();
         await addImageUploadTask({imageData, taskId})
-        res.status(201).json({message: "Task Queued", taskId});
+       return res.status(201).json({message: "Task Queued", taskId});
     }
    catch (error){
+        console.log(error)
        
-       res.status(500).json({error: "Internal server error",})
-        next(error);
+      return  res.status(500).json({error: "Internal server error",})
+        
     }
 
 

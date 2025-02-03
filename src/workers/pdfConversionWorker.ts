@@ -3,7 +3,7 @@ import { PdfToDocxTask } from "../services/pdfConverter";
 import { uploadDocxToCloudinary } from "../services/cloudinary"; 
 import {prisma} from "../config/db"
 
-const channel = getRabbitMQChannel();
+
 const processPdfToWord = async (taskData: any) =>{
 
     const {pdfData, taskId} = taskData;
@@ -29,6 +29,7 @@ const processPdfToWord = async (taskData: any) =>{
 
 
 const consumePdfToWordQueue = async () =>{
+    const channel = getRabbitMQChannel();
     channel.consume('pdfToWOrdQueue', async(msg:any)=>{
 
         const taskData = JSON.parse(msg.content.toString());
