@@ -24,13 +24,15 @@ async function initializeApp() {
            
         app.use(bodyParser.urlencoded({ extended: false }))
         app.use(express.json())
-        app.use(express.urlencoded())
+        //app.use(express.urlencoded())
 
         const upload = multer()
         
        
         app.post('/api/upload-image', upload.single('file'), 
             async (req: Request, res: Response, next: NextFunction) => {
+                upload
+                next()
                 
             }
         )

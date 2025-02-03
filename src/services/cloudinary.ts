@@ -9,9 +9,14 @@ cloudinary.config({
 export const uploadImageToCloudinary = async(imageData: string)=>{
     const uploadResult = await cloudinary.uploader.upload(
         `data:image/jpeg;base64, ${imageData}`,{public_id: "images"}
+
+
     ).catch((error)=>{
+        console.log(error)
         return error
     })
+
+        console.log(uploadResult)
 
     return (uploadResult);
 }

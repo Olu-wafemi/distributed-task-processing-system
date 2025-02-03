@@ -4,10 +4,10 @@ import { task } from '@prisma/client';
 
 export const addImageUploadTask = async(taskData: any) =>{
     const channel = getRabbitMQChannel();
-    console.log(channel)
+    //console.log(channel)
     const task = {type: 'image-upload', ...taskData};
 
-    console.log(task)
+    //console.log(task)
 
     channel.sendToQueue('imageUploadQueue', Buffer.from(JSON.stringify(task)));
 
