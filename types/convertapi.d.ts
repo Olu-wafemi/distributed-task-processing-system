@@ -1,5 +1,8 @@
-declare module 'convertapi' {
-    function convertapi(apiKey: string): any; // Use `any` for now or specify the correct type if you know it
-    export = convertapi;
-  }
-  
+// // convertapi.d.ts
+// declare module 'convertapi' {
+//   class ConvertApi {
+//     constructor(secret: string);
+//     convert(targetFormat: string, params: { File: string }, sourceFormat: string): Promise<any>;
+//   }
+//   export = ConvertApi;
+// }

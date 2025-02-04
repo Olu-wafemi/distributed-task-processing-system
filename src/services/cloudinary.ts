@@ -1,33 +1,46 @@
 import {v2 as cloudinary} from "cloudinary"
 import { error } from "console"
+import path from "path"
+
+import fs from "fs-extra"
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
+    cloud_name: "dry7setcz",
+    api_key: "191929653327513",
+    api_secret:"2lhJnsdZLABZfAuImJy9wC2E4io"
 })
 
-export const uploadImageToCloudinary = async(imageData: string)=>{
+export const uploadImageToCloudinary = async(imageData: string): Promise<any>=>{
+
+    try{
     const uploadResult = await cloudinary.uploader.upload(
-        `data:image/jpeg;base64, ${imageData}`,{public_id: "images"}
+        `data:image/jpeg;base64,${imageData}`,{public_id: "images"}
+    )
 
+        return uploadResult;
+    }catch(error){
 
-    ).catch((error)=>{
-        console.log(error)
-        return error
-    })
-
-        console.log(uploadResult)
-
-    return (uploadResult);
+        console.error(error)
+    }
 }
 
-export const uploadDocxToCloudinary = async(docsData: string)=>{
+export const uploadDocxToCloudinary = async(docsData: any, ): Promise<any>=>{
+
+    try{
+        const {docxPath, taskId} =  docsData
+     
     const uploadResult = await cloudinary.uploader.upload(
-        `data:image/pdf
-        ;base64, ${docsData}`,{public_id: "Docs"}
-    ).catch((error)=>{
-        return error
-    })
+       docxPath,{folder: "docs", resource_type: "raw"})
+
+    fs.removeSync(docxPath)
+   
+    
+    fs.removeSync(path.join(__dirname, "..", `uploads/${taskId}.pdf` ) )
 
     return (uploadResult);
+    }
+    catch(err){
+        console.error(err)
+        return err
+    }
 }
+

@@ -37,6 +37,11 @@ async function initializeApp() {
             }
         )
 
+        app.post('/api/convert-pdf-to-word', upload.single('pdf'), async(req: Request, res: Response, next: NextFunction)=>{
+                upload
+                next()
+        })
+
         app.use("/api", taskRoutes)
 
       

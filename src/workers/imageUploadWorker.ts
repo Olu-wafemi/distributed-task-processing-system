@@ -14,7 +14,7 @@ const RABBITMQ_URL:any = process.env.RABBITMQ_URL;
 const processImageUpload = async (taskData: any) =>{
     const {imageData,taskId} = taskData;
     try{
-        //console.log(taskId)
+
         const uploadedImage = await uploadImageToCloudinary(imageData);
         
         await prisma.task.create({
@@ -36,11 +36,8 @@ const consumeImageUploadQueue = async() =>{
     const channel = await connection.createChannel();
     
     await  channel.assertQueue("imageUploadQueue", {durable: true})
-    await  channel.assertQueue("imageUploadQueu", {durable: true})
     console.log("Worker listening for Queue")
     channel.consume('imageUploadQueue', async (msg: any)=>{
-        //console.log("QUEUE RECEIVED")
-        //console.log(msg)
         const taskData = JSON.parse(msg.content.toString())
         await processImageUpload(taskData)
         console.log("Image succesfully processed")

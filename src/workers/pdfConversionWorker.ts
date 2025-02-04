@@ -2,15 +2,23 @@ import { ConnectToRabbitMQ, getRabbitMQChannel } from "../config/rabbitmq";
 import { PdfToDocxTask } from "../services/pdfConverter"; 
 import { uploadDocxToCloudinary } from "../services/cloudinary"; 
 import {prisma} from "../config/db"
-
+import amqp from 'amqplib';
+import { emit } from "process";
+const RABBITMQ_URL = process.env.RABBITMQ_URL as string
 
 const processPdfToWord = async (taskData: any) =>{
 
     const {pdfData, taskId} = taskData;
 
     try{
-        const wordFile = await PdfToDocxTask(pdfData);
-        const uploadedWord = await uploadDocxToCloudinary(wordFile)
+        const docxPath = await PdfToDocxTask(taskData);
+        if(!docxPath){
+            return "PDf Conversion Failed"
+        }
+
+     
+        const uploadedWord = await uploadDocxToCloudinary({docxPath, taskId})
+        
 
         await prisma.task.create({
             data: {
@@ -29,11 +37,29 @@ const processPdfToWord = async (taskData: any) =>{
 
 
 const consumePdfToWordQueue = async () =>{
-    const channel = getRabbitMQChannel();
+    const connection = await amqp.connect(RABBITMQ_URL)
+    const channel = await connection.createChannel()
+
+    await channel. assertQueue("pdfToWOrdQueue", {durable: true})
+    console.log("Worker listening for Queue")
+    
+
     channel.consume('pdfToWOrdQueue', async(msg:any)=>{
 
+        
+
         const taskData = JSON.parse(msg.content.toString());
+
+        
         await processPdfToWord(taskData);
+
+        console.log("Task Completed")
+
+         
         channel.ack(msg)
+
+    
     } )
 }
+
+consumePdfToWordQueue()
