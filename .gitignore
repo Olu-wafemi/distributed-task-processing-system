@@ -6,3 +6,5 @@ erl_crash.dump
 prisma
 
 .DS_Store
+
+prisma/migrations
