@@ -1,36 +1,43 @@
-import { channel } from "diagnostics_channel";
-import { addImageUploadTask, addPdfConversionTask } from "../../src/services/taskService";
-
-
+import { ConnectToRabbitMQ } from "../../src/config/rabbitmq";
+import { addImageUploadTask } from "../../src/services/taskService";
 import amqp from 'amqplib';
-
 
 jest.mock('amqplib');
 
-describe('Task Queueing Serice', ()=>{
-
+describe('Task Queueing Service', () => {
     let channelMock: any;
     let connectionMock: any;
 
-    beforeAll(async ()=> {
+    beforeAll(async () => {
+       
         channelMock = {
-            assertQueue: jest.fn(),
-            sendToQueue: jest.fn(),
-        }
-    })
+            assertQueue: jest.fn().mockResolvedValue(undefined),
+            sendToQueue: jest.fn().mockResolvedValue(undefined),
+        };
+        connectionMock = {
+            createChannel: jest.fn().mockResolvedValue(channelMock),
+            close: jest.fn(),
+        };
+        (amqp.connect as jest.Mock).mockResolvedValue(connectionMock);
 
-    connectionMock = {
-        createChannel: jest.fn().mockResolvedValue(channelMock),
-        close: jest.fn(),
-    };
+        await ConnectToRabbitMQ()
 
-    (amqp.connect as jest.Mock).mockResolvedValue(connectionMock);
-
-it("should add an image upload task to the queue", async () =>{
-    await addImageUploadTask({imageData: "fakeBase64Image", taskId: "1234"})
-
-    expect(channelMock.assertQueue).toHaveBeenCalledWith('image_upload_queue',{durable: true})
     
-})
+        console.log('Connection and channel mocks are properly set up.');
+    });
+   
 
-})
+    it("should add an image upload task to the queue", async () => {
+        const task = {type: 'image-upload', imageData: "fakeBase64Image", taskId: "1234" };
+
+        await addImageUploadTask(task);
+
+        
+        expect(channelMock.assertQueue).toHaveBeenCalledWith('imageUploadQueue', { durable: true });
+
+        expect(channelMock.sendToQueue).toHaveBeenCalledWith(
+            'imageUploadQueue',
+            Buffer.from(JSON.stringify(task))
+        );
+    });
+});
