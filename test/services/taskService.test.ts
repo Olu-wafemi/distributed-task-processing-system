@@ -1,5 +1,5 @@
 import { ConnectToRabbitMQ } from "../../src/config/rabbitmq";
-import { addImageUploadTask } from "../../src/services/taskService";
+import { addImageUploadTask,addPdfConversionTask  } from "../../src/services/taskService";
 import amqp from 'amqplib';
 
 jest.mock('amqplib');
@@ -40,4 +40,16 @@ describe('Task Queueing Service', () => {
             Buffer.from(JSON.stringify(task))
         );
     });
+
+    it("should add a pdf image upload task to queue", async()=>{
+        const task = {type: 'pdf-to-word', tempfilepath: "fakedata", taskId: "12345" }
+
+        await addPdfConversionTask(task)
+        
+        expect(channelMock.assertQueue).toHaveBeenCalledWith("pdfToWordQueue", {durable: true});
+
+        expect(channelMock.sendToQueue).toHaveBeenCalledWith(
+            "pdfToWOrdQueue", Buffer.from(JSON.stringify(task))
+        );
+    })
 });
