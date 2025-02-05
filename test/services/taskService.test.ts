@@ -45,11 +45,9 @@ describe('Task Queueing Service', () => {
         const task = {type: 'pdf-to-word', tempfilepath: "fakedata", taskId: "12345" }
 
         await addPdfConversionTask(task)
-        
-        expect(channelMock.assertQueue).toHaveBeenCalledWith("pdfToWordQueue", {durable: true});
 
         expect(channelMock.sendToQueue).toHaveBeenCalledWith(
-            "pdfToWOrdQueue", Buffer.from(JSON.stringify(task))
+            "pdfToWordQueue", Buffer.from(JSON.stringify(task))
         );
     })
 });

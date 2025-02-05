@@ -16,5 +16,5 @@ export const addImageUploadTask = async(taskData: any) =>{
 export const addPdfConversionTask = async(taskData: any) =>{
     const channel = getRabbitMQChannel();
     const task = {type: 'pdf-to-word', ...taskData};
-    channel.sendToQueue('pdfToWOrdQueue', Buffer.from(JSON.stringify(task)));
+    channel.sendToQueue('pdfToWordQueue', Buffer.from(JSON.stringify(task)));
 };

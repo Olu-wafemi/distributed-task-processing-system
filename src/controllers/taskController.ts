@@ -10,17 +10,11 @@ import fs from 'fs-extra';
 const uploadImageController = async(req: Request, res: Response, next: NextFunction): Promise<any>    =>{
 
    try{
-
-
-        //console.log(req.file)
-   
         const imageData = req.file?.buffer.toString('base64');
         if(!imageData){
             return res.status(400).json({status: false, message: "No image detected"});
 
         }
-        
-
         const taskId = generateTaskId();
         await addImageUploadTask({imageData, taskId})
        return res.status(201).json({message: "Task Queued", taskId});
@@ -31,9 +25,6 @@ const uploadImageController = async(req: Request, res: Response, next: NextFunct
       return  res.status(500).json({error: "Internal server error",})
         
     }
-
-
-
 };
 
 const PdfToWordController = async(req:Request, res: Response):Promise<any>=> {
