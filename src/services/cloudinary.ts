@@ -2,11 +2,14 @@ import {v2 as cloudinary} from "cloudinary"
 import { error } from "console"
 import path from "path"
 
+import dotenv from "dotenv"
+
+
 import fs from "fs-extra"
 cloudinary.config({
-    cloud_name: "dry7setcz",
-    api_key: "191929653327513",
-    api_secret:"2lhJnsdZLABZfAuImJy9wC2E4io"
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret:process.env.API_SECRET
 })
 
 export const uploadImageToCloudinary = async(imageData: string): Promise<any>=>{
