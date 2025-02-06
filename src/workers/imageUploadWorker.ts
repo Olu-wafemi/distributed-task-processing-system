@@ -47,4 +47,7 @@ const consumeImageUploadQueue = async() =>{
 }
 
 
-consumeImageUploadQueue()
+
+//consumeImageUploadQueue()
+
+export {processImageUpload , consumeImageUploadQueue}
