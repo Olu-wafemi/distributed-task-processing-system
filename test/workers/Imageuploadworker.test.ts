@@ -1,3 +1,4 @@
+import exp from "constants";
 import { ConnectToRabbitMQ } from "../../src/config/rabbitmq";
 import { processImageUpload, consumeImageUploadQueue } from "../../src/workers/imageUploadWorker";
 import amqp from 'amqplib';
@@ -44,13 +45,8 @@ describe("Test for Image Upload Worker", ()=>{
 
         await consumeImageUploadQueue()
         
-        expect(connectionMock.createChannel).toHaveBeenCalledTimes(1)
-
-        //expect(channelMock.assertQueue).toHaveBeenCalledWith("imageUploadQueue", {durable: true})
-        //expect(channelMock.consume).toHaveBeenCalledWith("")
-
-
-
+      
+        expect(channelMock.assertQueue).toHaveBeenCalledWith("imageUploadQueue", {durable: true})  
 
     })
 

@@ -37,7 +37,7 @@ const consumeImageUploadQueue = async() =>{
     
     await  channel.assertQueue("imageUploadQueue", {durable: true})
     console.log("Worker listening for Queue")
-    channel.consume('imageUploadQueue', async (msg: any)=>{
+     channel.consume('imageUploadQueue', async (msg: any)=>{
         const taskData = JSON.parse(msg.content.toString())
         await processImageUpload(taskData)
         console.log("Image succesfully processed")
