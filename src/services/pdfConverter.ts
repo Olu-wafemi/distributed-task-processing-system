@@ -1,13 +1,17 @@
+
 import {task} from "@prisma/client";
 import {prisma} from '../config/db';
 import path from "path"
 // @ts-ignore
 import ConvertAPI from 'convertapi';
+import * as dotenv from "dotenv"
+dotenv.config()
 
-import dotenv from "dotenv"
-const secret = process.env.SECRET_KEY as string
 
-const convertapi = new ConvertAPI(secret,  { conversionTimeout: 60 })
+
+
+
+const convertapi = new ConvertAPI( process.env.SECRET_KEY!,  { conversionTimeout: 60 })
 
 export const PdfToDocxTask = async(taskData: any): Promise<string> =>{
 

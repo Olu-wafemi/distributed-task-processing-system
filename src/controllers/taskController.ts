@@ -3,10 +3,12 @@ import { addImageUploadTask, addPdfConversionTask } from "../services/taskServic
 import  {generateTaskId } from "../utils/generateId";
 import path from "path";
 import fs from 'fs-extra';
+import { fileURLToPath } from "url";
 
+import * as dotenv from "dotenv"
+dotenv.config()
 
-
-
+console.log(process.env)
 const uploadImageController = async(req: Request, res: Response, next: NextFunction): Promise<any>    =>{
 
    try{
@@ -29,10 +31,10 @@ const uploadImageController = async(req: Request, res: Response, next: NextFunct
 
 const PdfToWordController = async(req:Request, res: Response):Promise<any>=> {
 
+
+
    try{
 
-      
-    
     if(!req.file){
       return  res.status(400).json({error: "No PDF file detected"});
     }
@@ -45,6 +47,8 @@ const PdfToWordController = async(req:Request, res: Response):Promise<any>=> {
     }
     
     fs.writeFileSync(tempfilepath, req.file.buffer)
+
+    
 
     
     await addPdfConversionTask({tempfilepath, taskId});

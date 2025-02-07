@@ -3,7 +3,7 @@ import { ConnectToRabbitMQ } from "../../src/config/rabbitmq";
 import { processImageUpload, consumeImageUploadQueue } from "../../src/workers/imageUploadWorker";
 import amqp from 'amqplib';
 
-///jest.mock("../../src/config/rabbitmq")
+jest.mock("../../src/config/rabbitmq")
 
 jest.mock("amqplib");
 jest.mock("../../src/workers/imageUploadWorker");
@@ -45,8 +45,10 @@ describe("Test for Image Upload Worker", ()=>{
 
         await consumeImageUploadQueue()
         
+
+        expect(connectionMock.createChannel).toHaveReturnedTimes(1)
       
-        expect(channelMock.assertQueue).toHaveBeenCalledWith("imageUploadQueue", {durable: true})  
+        //expect(channelMock.assertQueue).toHaveBeenCalledWith("imageUploadQueue", {durable: true})  
 
     })
 

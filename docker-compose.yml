@@ -1,0 +1,52 @@
+services:
+  rabbitmq:
+    image: 'rabbitmq:latest'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', 'check_running']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  app:
+    build: .
+    ports:
+      - '8000:8000'
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - RABBITMQ_URL=amqp://rabbitmq
+      - DATABASE_URL=postgres://user:password@postgres:5432/distributed_systems_db
+    restart: always
+
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: distributed_systems_db
+    ports:
+      - '5432:5432'
+
+  worker:
+    build: .
+    command: ['npx', 'ts-node', 'src/workers/imageUploadWorker.ts']
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq
+
+  pdf-worker:
+    build: .
+    command: ['npx', 'ts-node', 'src/workers/pdfConversionWorker.ts']
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq

@@ -4,6 +4,9 @@ import { uploadDocxToCloudinary } from "../services/cloudinary";
 import {prisma} from "../config/db"
 import amqp from 'amqplib';
 import { emit } from "process";
+
+import * as dotenv from "dotenv"
+dotenv.config()
 const RABBITMQ_URL = process.env.RABBITMQ_URL as string
 
 const processPdfToWord = async (taskData: any) =>{
@@ -30,6 +33,8 @@ const processPdfToWord = async (taskData: any) =>{
     }
     catch(error){
 
+        console.log(error)
+
 
     }
 }
@@ -46,9 +51,13 @@ const consumePdfToWordQueue = async () =>{
 
     channel.consume('pdfToWOrdQueue', async(msg:any)=>{
 
+        console.log("Task received")
+
         
 
         const taskData = JSON.parse(msg.content.toString());
+
+       
 
         
         await processPdfToWord(taskData);

@@ -14,7 +14,7 @@ export const ConnectToRabbitMQ = async ()=>{
         connection = await amqp.connect(RABBITMQ_URL);
         channel = await connection.createChannel();
         await channel.assertQueue('imageUploadQueue', {durable: true});
-        await channel.assertQueue("pdfToWordQueue", {durable: true});
+        await channel.assertQueue("pdfToWOrdQueue", {durable: true});
         console.log("Queues are ready")
         
         }

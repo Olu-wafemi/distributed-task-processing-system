@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import { testDbConnection } from "./src/config/db";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import multer from "multer";
 import taskRoutes from "./src/routes/taskRoutes"
 import { ConnectToRabbitMQ } from "./src/config/rabbitmq";
