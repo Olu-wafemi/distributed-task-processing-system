@@ -1,4 +1,4 @@
-apiVersion: dtps/v1
+apiVersion: apps/v1
 kind: Depolyment
 metadata:
   name: rabbitmq

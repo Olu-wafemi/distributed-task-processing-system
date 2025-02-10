@@ -14,8 +14,11 @@ spec:
     spec:
       containers:
         - name: worker
-          image: effemm/projects2025-worker:latest
-          command: ["npx", "ts-node", "src/workers/imageUploadWorker.ts"]
+          image: effemm/projects2025-pdf-worker:latest
+          command: ["npx", "ts-node", "src/workers/pdfConversionWorker.ts"]
+          env:
+            - name: RABBITMQ_URL
+              value: "amqp://rabbitmq"
           resources:
             requests:
               memory: "128Mi"
