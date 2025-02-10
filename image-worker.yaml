@@ -14,9 +14,12 @@ spec:
     spec:
       containers:
         - name: worker
-          image:
-  ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
-  type: NodePort
+          image: projects2025-worker:latest
+          command: ["npx", "ts-node", "src/workers/imageUploadWorker.ts"]
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
