@@ -8,12 +8,15 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
 
+import { config} from "../../config"
 
 
 
-const convertapi = new ConvertAPI( process.env.SECRET_KEY!,  { conversionTimeout: 60 })
+const convertapi = new ConvertAPI( config.secretKey!,  { conversionTimeout: 60 })
 
 export const PdfToDocxTask = async(taskData: any): Promise<string> =>{
+
+
 
     try{
         const {tempfilepath,taskId} = taskData

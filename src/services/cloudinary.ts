@@ -4,12 +4,12 @@ import path from "path"
 
 import dotenv from "dotenv"
 
-
+import {  config } from "../../config"
 import fs from "fs-extra"
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret:process.env.API_SECRET
+    cloud_name: config.rabbitmqUrl,
+    api_key: config.apiKey,
+    api_secret: config.apiSecret
 })
 
 export const uploadImageToCloudinary = async(imageData: string): Promise<any>=>{
@@ -34,11 +34,7 @@ export const uploadDocxToCloudinary = async(docsData: any, ): Promise<any>=>{
     const uploadResult = await cloudinary.uploader.upload(
        docxPath,{folder: "docs", resource_type: "raw"})
 
-    fs.removeSync(docxPath)
    
-    
-    fs.removeSync(path.join(__dirname, "..", `uploads/${taskId}.pdf` ) )
-
     return (uploadResult);
     }
     catch(err){

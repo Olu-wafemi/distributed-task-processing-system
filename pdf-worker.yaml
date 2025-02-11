@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: worker
+  name: pdf-worker
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: worker
@@ -14,11 +14,39 @@ spec:
     spec:
       containers:
         - name: worker
-          image: effemm/projects2025-pdf-worker:latest
+          image: effemm/dtps-pdf_worker:v1.3
           command: ["npx", "ts-node", "src/workers/pdfConversionWorker.ts"]
           env:
             - name: RABBITMQ_URL
-              value: "amqp://rabbitmq"
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: RABBITMQ_URL
+            - name: CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: CLOUD_NAME
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: API_KEY
+            - name: API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: API_SECRET
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: SECRET_KEY
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: DATABASE_URL
           resources:
             requests:
               memory: "128Mi"

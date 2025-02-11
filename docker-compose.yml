@@ -31,7 +31,7 @@ services:
     ports:
       - '5432:5432'
 
-  worker:
+  image_worker:
     build: .
     command: ['npx', 'ts-node', 'src/workers/imageUploadWorker.ts']
     depends_on:
@@ -41,7 +41,7 @@ services:
     environment:
       - RABBITMQ_URL=amqp://rabbitmq
 
-  pdf-worker:
+  pdf_worker:
     build: .
     command: ['npx', 'ts-node', 'src/workers/pdfConversionWorker.ts']
     depends_on:

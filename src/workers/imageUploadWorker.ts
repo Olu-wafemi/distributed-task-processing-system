@@ -32,6 +32,8 @@ const processImageUpload = async (taskData: any) =>{
 }
 
 const consumeImageUploadQueue = async() =>{
+
+    console.log("Worker script started...");
     const connection = await amqp.connect(RABBITMQ_URL);
     const channel = await connection.createChannel();
     
@@ -48,6 +50,6 @@ const consumeImageUploadQueue = async() =>{
 
 
 
-//consumeImageUploadQueue()
+consumeImageUploadQueue()
 
 export {processImageUpload , consumeImageUploadQueue}

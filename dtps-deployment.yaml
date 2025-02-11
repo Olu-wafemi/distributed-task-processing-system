@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dtps
-          image: effemm/projects2025-app:latest
+          image: effemm/dtps-app:v1.3
           ports:
             - containerPort: 8080
           resources:
