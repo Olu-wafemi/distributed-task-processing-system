@@ -10,7 +10,11 @@ services:
       timeout: 5s
       retries: 5
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - 'linux/amd64'
     ports:
       - '8000:8000'
     depends_on:
@@ -32,7 +36,11 @@ services:
       - '5432:5432'
 
   image_worker:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - 'linux/amd64'
     command: ['npx', 'ts-node', 'src/workers/imageUploadWorker.ts']
     depends_on:
       rabbitmq:
@@ -42,7 +50,11 @@ services:
       - RABBITMQ_URL=amqp://rabbitmq
 
   pdf_worker:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - 'linux/amd64'
     command: ['npx', 'ts-node', 'src/workers/pdfConversionWorker.ts']
     depends_on:
       rabbitmq:
